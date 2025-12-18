@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Spezzia App</title>
+
+<style>
+/* =========================
+   BASE GENERAL
+   ========================= */
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    overflow: hidden;
+    background: #f4f4f4;
+}
+
+/* =========================
+   SISTEMA DE PANTALLAS
+   ========================= */
+
+.screen {
+    position: absolute;
+    inset: 0;
+    padding: 20px;
+    box-sizing: border-box;
+    background: #f4f4f4;
+    overflow-y: auto;
+
+    /* Estado oculto */
+    opacity: 1;
+    transform: translateY(6px);
+    pointer-events: none;
+
+    /* Animación iOS-like */
+    transition:
+        opacity 0.27s ease-out,
+        transform 0.27s ease-out;
+}
+
+.screen.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    z-index: 1;
+}
+
+/* =========================
+   TEXTO Y BOTONES
+   ========================= */
+
+h1, h2 {
+    text-align: center;
+}
+
+button {
+    width: 100%;
+    padding: 15px;
+    margin: 8px 0;
+    font-size: 17px;
+    background: #111;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+.back {
+    background: #666;
+}
+
+.item {
+    margin: 8px 0;
+    padding: 8px;
+    border-bottom: 1px solid #ccc;
+}
+
+/* =========================
+   HOME NEGRO – SPEZZIA
+   ========================= */
+
+.home-black {
+    background-color: #000;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 60px;
+}
+
+.logo-home {
+    width: 260px;
+    max-width: 80%;
+    margin-bottom: 90px;
+}
+
+.enter-btn {
+    background-color: #000;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.6);
+    padding: 14px 42px;
+    font-size: 18px;
+    letter-spacing: 2px;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(255,255,255,0.25);
+    transition: box-shadow 0.3s ease;
+}
+
+.enter-btn:hover {
+    box-shadow: 0 0 18px rgba(255,255,255,0.6);
+}
+
+/* =========================
+   EXISTENCIAS
+   ========================= */
+
+.search-box {
+    background:#000;
+    padding:14px;
+    border-radius:30px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.search-box input {
+    background:transparent;
+    border:none;
+    color:#fff;
+    font-size:16px;
+    width:100%;
+    outline:none;
+}
+
+.search-box input::placeholder {
+    color:#bbb;
+}
+
+.suggestions {
+    background:#fff;
+    border-radius:10px;
+    overflow:hidden;
+    margin-bottom:20px;
+}
+
+.suggestions div {
+    padding:12px;
+    border-bottom:1px solid #eee;
+    cursor:pointer;
+}
+
+.suggestions div:hover {
+    background:#f4f4f4;
+}
+
+.stock-list h3 {
+    margin-top:20px;
+}
+
+.stock-item {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 0;
+    border-bottom:1px solid #ddd;
+}
+
+.status {
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    color:#fff;
+    font-size:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+}
+
+.green { background:#2ecc71; }
+.yellow { background:#f1c40f; color:#000; }
+.red { background:#e74c3c; }
+
+.traffic {
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    margin-top:40px;
+}
+
+.traffic div {
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    cursor:pointer;
+}
+
+.quantity-box {
+    margin-top:30px;
+    text-align:center;
+}
+
+.quantity-box input {
+    font-size:22px;
+    width:80px;
+    text-align:center;
+    padding:10px;
+}
+
+</style>
+
+<script>
+let current = 'home';
+
+function show(id) {
+    const currentScreen = document.getElementById(current);
+    const nextScreen = document.getElementById(id);
+
+    if (currentScreen) {
+        currentScreen.classList.remove('active');
+        currentScreen.classList.add('exit');
+    }
+
+    nextScreen.classList.add('active');
+    nextScreen.classList.remove('exit');
+
+    setTimeout(() => {
+        if (currentScreen) currentScreen.classList.remove('exit');
+        current = id;
+    }, 450);
+}
+
+/* =========================
+   EXISTENCIAS – DATA REAL
+   ========================= */
+
+let stock = {};
+
+const products = {
+  comida: [
+    
+   /* ===== SPECIALI ===== */
+    "Crema di Funghi",
+    "Zucca e Burrata",
+    "Tortelloni di Zucca",
+    "Pizza di Zucca",
+    "Cotoletta di Maiale",
+    "Pumpkin Cake",
+    "Zeppole",
+
+
+    /* ===== ANTIPASTI ===== */ 
+    "Arancini",   
+    "Burrata #1",
+    "Burrata #2",
+    "Calamari Fritti",
+    "Carpaccio di Manzo",
+    "Fichi",
+    "Mickey´s Meatballs",
+    "Pan Rustico",
+    
+
+    /* INSALATA */
+    "Pierina",
+    "Tritatta",
+    "Spezzia",
+
+    /* SECONDI */
+    "Polipo",
+    "Risotto e Filetto",
+
+    /* ===== PASTA ===== */
+    "Agnolotti",
+    "Carbonara",
+    "Strozzapreti Amatriciana",
+    "Fagottini",
+    "Gnocchetti Gorgonzola",
+    "Gnocchi Norcina",
+    "Gnocchi di Patate",
+    "Quadretti Marsala",
+    "Ravioli Bianchi Neri",
+    "Tagliatelle",
+    "Tagliolini Spezzia",
+    "Tagliolini al Limone",
+    "Tagliolini Neri",
+
+
+    /* PIZZAS */
+    "Margherita",
+    "Nduja",
+    "Burrata",
+    "Salame",
+    "Prosciutto",
+    "Provolone",
+    "Tartufo",
+    "Pepperoni e Salsiccia",
+    "Pesto",
+
+    /* DOLCI */
+    "Banana Tart",
+    "Fragola",
+    "Panna Cotta",
+    "Rosy´s Cake",
+    "Tiramisú",
+    "Torta Capresse",
+    "Ricotta Cheesecake",
+    "Cannoli Siciliani",
+    "Affogato",
+    "Gelato Amaretto",
+    "Gelato Vainilla",
+    "Gelato Chocolate",
+    
+
+
+
+
+
+
+
+
+
+
+  ],
+
+  bebidas: [
+    /* CERVEZAS INDUSTRIALES */
+    "Tecate Light",
+    "XX Lager",
+    "XX Ámbar",
+    "Bohemia Obscura",
+    "Bohemia Clara",
+    "Heineken",
+    "Heineken 0.0",
+    "Amstel Ultra",
+    "Vaso Michelado",
+    "Vaso Helado",
+    "Vaso Clamato",
+
+    /* CERVEZA ARTESANAL */
+    "Río de Lumbre IPA",
+    "Páramo Pale Ale Caramel",
+    "Colima Cero IPA",
+    "Ticus Porter Chocolate",
+    "Biddelberg Jackson IPA",
+    "Biddelberg Rosenberg Stout",
+    "Monopolio Lager",
+    "Monopolio IPA",
+
+    /* CERVEZA ITALIANA */
+    "Peroni Red Label",
+    "Moretti Pale Lager",
+    "Isaac Witbier",
+    "Rock’n Roll APA",
+
+    /* REFRESCOS */
+    "Coca Cola",
+    "Coca Cola Sin Azúcar",
+    "Coca Cola Light",
+    "Sprite",
+    "Dr Pepper",
+    "Sidral",
+    "Fresca",
+    "Ginger Ale",
+
+    /* AGUAS */
+    "Agua Ciel",
+    "Agua Artesanal Duero",
+    "Agua Tehuacán Platino",
+    "San Pellegrino",
+    "Topo Chico",
+    "Peñafiel",
+
+    /* MIXOLOGÍA */
+    "Apple Pie",
+    "Beets",
+    "Chapulín",
+    "Coffee Lover",
+    "Green London",
+    "Mojito Italiano",
+    "Negroni Spezzia",
+    "Strawberry Fields",
+    "Yellow",
+    "Sandía Pop",
+
+    /* SOFT BAR */
+    "Jazmín",
+    "Limonata Rosa",
+    "Manila",
+    "Manguito Colado",
+    "Muricata",
+    "Sole",
+    "Speziata",
+    "Ginger Float",
+    "Soda Punch",
+
+    /* APERITIVOS */
+    "Aperol",
+    "Campari",
+    "Cinzano",
+    "Fernet Branca",
+    "St Germain",
+
+    /* DIGESTIVOS */
+    "Amaretto Conti",
+    "Baileys",
+    "Chartreuse Verde",
+    "Chinchon Dulce",
+    "Chinchon Seco",
+    "Frangelico",
+    "Grappa Prosseco",
+    "Licor 43",
+    "Limoncello de la Casa",
+    "Las Cadenas",
+    "Strega",
+    "Vaccari Nero",
+ 
+    /* SPRITZ */
+    "Aperol Spezzia",
+    "Aperol Spritz",
+    "Strega Spritz",
+    "St Germain Spritz",
+
+    /* DESTILADOS */
+    
+    /* BOURBON */
+    "Bulleit",
+    "Maker’s Mark",
+
+    /* BRANDY */
+    "Terry",
+    "Torres 10",
+    "Magno",
+
+    /* GINEBRA */
+    "Hendrick’s",
+    "Beefeater",
+    "London No. 1",
+    "Puerto de Indias Strawberry",
+    "Bombay Sapphire",
+
+    /* MEZCAL */
+    "Ojo de Tigre",
+    "Señorío",
+    "Barro Espadín Destilado de Piña",
+    "Barro Espadín con Gusano",
+    "Barro Tepeztate Silvestre",
+    "Barro Tobalá Silvestre",
+    "Mezcalito de Mi Corazón Papalometl",
+
+    /* RON */
+    "Bacardi Blanco",
+    "Bacardi Añejo",
+    "Havana 7",
+    "Matusalem Clásico",
+    "Matusalem Platino",
+    "Zacapa Centenario 23",
+
+    /* TEQUILA */
+    "1800 Cristalino",
+    "Don Julio 70",
+    "Herradura Reposado",
+    "José Cuervo Tradicional",
+    "Maestro Dobel Diamante",
+
+    /* WHISKY */
+    "Chivas Regal 12",
+    "Jack Daniel’s No. 7",
+    "Johnnie Walker Red Label",
+    "Johnnie Walker Black Label",
+    "Macallan 12",
+
+/* VINOS */
+
+/* ABRUZZO */
+"Nicchio Montepulciano d’Abruzzo",
+"Storico",
+"Terre di Chieti I.G.P",
+"Ottobucce",
+
+/* UMBRIA */
+"Vitiano – Falesco",
+
+/* PUGLIA */
+"Chardonnay – Tormaresca",
+"Primitivo Puglia Zin – Pasqua",
+"Zinfandel Blush – Rocca",
+
+/* VENETO */
+"Valpolicella Black Label – Pasqua",
+"Amarone della Valpolicella – Pasqua",
+"Passione Sentimento – Pasqua",
+"Lui – Pasqua",
+"Ripasso Superiore – San Antonio",
+
+/* TOSCANA */
+"Poggio Torto – Fanti",
+"Santa Cristina Chianti – Antinori",
+
+/* SICILIA */
+"Anthilia – Donnafugata",
+"Sedara – Donnafugata",
+"Lumera – Donnafugata",
+
+/* ARGENTINA / MÉXICO / PORTUGAL */
+"Cabernet Sauvignon Vive – Benegas",
+"Trasiego Mezcla Mediterránea",
+"Trasiego Nebbiolo",
+"Trasiego Selección Blanca",
+"Topo Verde",
+
+/* ESPUMOSOS */
+"Lambrusco Grasparossa DOC",
+"Moscato – La Gioiosa",
+"Asolo Prosecco",
+
+
+
+
+    /* CAFETERÍA */
+    "Americano",
+    "Capuccino",
+    "Espresso",
+    "Espresso Doble",
+    "Macchiato",
+    "Macchiato Doble",
+    "Espresso Tonic",
+
+    /* TÉS */
+    "Manzanilla",
+    "Té Verde con Menta",
+    "Hierbabuena Ahumada",
+    "Lavanda con Toronjil",
+    "Té Negro Manzana y Naranja",
+    "Té Verde Jazmín",
+    "Indian Chai",
+    "Té Naranja y Canela",
+    "Té Frutos Rojos"
+  ]
+};
+
+let currentProduct = "";
+
+/* =========================
+   BUSCADOR
+   ========================= */
+
+function searchProduct(val){
+  const sug = document.getElementById("suggestions");
+  sug.innerHTML = "";
+  if(!val) return;
+
+  Object.values(products).flat().forEach(p=>{
+    if(p.toLowerCase().includes(val.toLowerCase())){
+      const d = document.createElement("div");
+      d.innerText = p;
+      d.onclick = ()=>openTraffic(p);
+      sug.appendChild(d);
+    }
+  });
+}
+
+/* =========================
+   SEMÁFORO
+   ========================= */
+
+function openTraffic(p){
+  currentProduct = p;
+  document.getElementById("product-name").innerText = p;
+  show("existencias-traffic");
+}
+
+function setStatus(color){
+  if(color === "green"){
+    delete stock[currentProduct];
+    show("existencias");
+    renderStock();
+  }
+  if(color === "red"){
+    stock[currentProduct] = {status:"red"};
+    show("existencias");
+    renderStock();
+  }
+  if(color === "yellow"){
+    show("existencias-qty");
+  }
+}
+
+function saveQty(){
+  const q = parseInt(document.getElementById("qty").value);
+  if(q > 0){
+    stock[currentProduct] = {status:"yellow", qty:q};
+    show("existencias");
+    renderStock();
+  }
+}
+
+/* =========================
+   RENDER STOCK
+   ========================= */
+
+function renderStock(){
+  const food = document.getElementById("stock-comida");
+  const drink = document.getElementById("stock-bebidas");
+  food.innerHTML = "";
+  drink.innerHTML = "";
+
+  Object.keys(stock).forEach(p=>{
+    const div = document.createElement("div");
+    div.className = "stock-item";
+    const s = stock[p];
+    const status = document.createElement("div");
+
+    if(s.status === "yellow"){
+      status.className = "status yellow";
+      status.innerText = s.qty;
+      status.onclick = ()=>{
+        s.qty--;
+        if(s.qty <= 0) s.status = "red";
+        renderStock();
+      };
+    } else {
+      status.className = "status red";
+      status.onclick = ()=>openTraffic(p);
+    }
+
+    div.innerHTML = `<span>${p}</span>`;
+    div.appendChild(status);
+
+    if(products.comida.includes(p)) food.appendChild(div);
+    else drink.appendChild(div);
+  });
+}
+</script>
+
+
+
+</head>
+<body>
+
+<!-- HOME -->
+<div id="home" class="screen home-black active">
+    <img src="logo-spezzia.png" class="logo-home">
+    <button class="enter-btn" onclick="show('restaurantes')">ENTRAR</button>
+</div>
+
+<!-- RESTAURANTES -->
+<div id="restaurantes" class="screen">
+    <h2>Elige tu restaurante</h2>
+    <button onclick="show('spezzia')">Spezzia</button>
+    <button onclick="show('tarascos')">Los Tarascos</button>
+</div>
+
+<!-- HOME SPEZZIA -->
+<div id="spezzia" class="screen">
+<h2>Spezzia</h2>
+
+<button onclick="show('menu')">Menú</button>
+<button onclick="alert('Estudio – próximamente')">Estudio</button>
+<button onclick="alert('Práctica – próximamente')">Práctica</button>
+<button onclick="show('existencias')">Existencias</button>
+<button onclick="alert('SpezzIA – Asistente inteligente de toma de órdenes. Próximamente.')">SpezzIA</button>
+
+<button class="back" onclick="show('restaurantes')">Volver</button>
+</div>
+
+
+<!-- MENU -->
+<div id="menu" class="screen">
+    <h2>Menú</h2>
+    <button onclick="show('alimentos')">Alimentos</button>
+    <button onclick="show('bebidas')">Bebidas</button>
+    <button class="back" onclick="show('spezzia')">Volver</button>
+</div>
+
+<!-- ALIMENTOS -->
+<div id="alimentos" class="screen">
+    <h2>Alimentos</h2>
+    <button onclick="show('speciali')">Speciali</button>
+    <button onclick="show('antipasti')">Antipasti</button>
+    <button onclick="show('insalata')">Insalata</button>
+    <button onclick="show('pasta')">Pasta</button>
+    <button onclick="show('secondi')">Secondi</button>
+    <button onclick="show('pizza')">Pizza</button>
+    <button onclick="show('dolci')">Dolci</button>
+    <button class="back" onclick="show('menu')">Volver</button>
+</div>
+
+
+<!-- SPECIALI -->
+<div id="speciali" class="screen">
+<h2>Speciali del Mes</h2>
+<div class="item"><strong>Crema di Funghi</strong> – Velouté de hongos, vino tinto, duxelle, crocante de parmigiano, crema trufada</div>
+<div class="item"><strong>Zucca e Burrata</strong> – Calabaza en tacha, demi glace, burrata, nuez pecana, aceite de olivo, sal Maldon</div>
+<div class="item"><strong>Tortelloni di Zucca</strong> – Calabaza butternut, burro fuso, salvia, espárragos, grana padano</div>
+<div class="item"><strong>Pizza di Zucca</strong> – Fonduta de gorgonzola, puré de butternut, ragout de costilla, demi glace</div>
+<div class="item"><strong>Cotoletta de Maiale</strong> – Chuletón marinado 24 h, polenta cremosa, mostarda de manzana, Flor de Hinojo</div>
+<div class="item"><strong>Pumpkin Cake</strong> – Pastel especiado, crema de vainilla, pepitas fritas, gelato de vainilla</div>
+<div class="item"><strong>Zeppole</strong> – Corazon de Dona de calabaza y ricotta, canela, gelato de vainilla</div>
+<button class="back" onclick="show('alimentos')">Volver</button>
+</div>
+
+
+<!-- ANTIPASTI -->
+<div id="antipasti" class="screen">
+<h2>Antipasti</h2>
+<div class="item"><strong>Arancini</strong> – Bolas de risotto rellenas de fontina, parmigiano, pomodoro alla nduja</div>
+<div class="item"><strong>Burrata No.1</strong> – Burrata, pan rústico, mermelada de jitomate, aceite de olivo, sal Maldon</div>
+<div class="item"><strong>Burrata No.2</strong> – Burrata, pan rústico, mermelada de guayaba-maracuyá, cúrcuma, chile güero en escabeche, cebollín, flor de manzanilla</div>
+<div class="item"><strong>Calamari Fritti</strong> – Especias de la India, aioli de ajo y hierbas</div>
+<div class="item"><strong>Carpaccio di Manzo</strong> – Filete sellado, fonduta de taleggio, arúgula, bottarga</div>
+<div class="item"><strong>Fichi</strong> – Higos, fonduta de gorgonzola trufada, higos, arúgula, balsámico añejo</div>
+<div class="item"><strong>Mickey’s Meatballs</strong> – Albóndigas italianas, parmigiano, perejil, aceite de olivo</div>
+<div class="item"><strong>Pan Rústico</strong> – Ajo crudo y chimichurri</div>
+<button class="back" onclick="show('alimentos')">Volver</button>
+</div>
+
+
+<!-- INSALATA -->
+<div id="insalata" class="screen">
+<h2>Insalata</h2>
+<div class="item"><strong>Pierina</strong> – Corazon de Romaine, trucha ahumada, manzana gala, crème fraîche, limón en conserva, aceituna negra deshidratada, Vinagreta de Limon</div>
+<div class="item"><strong>Tritatta</strong> – Lechuga Romana, Hierba Buena, Albahaca, Aguacate, Pepino, Parmiggiano, Grana Padano, Pistache, Vinagreta de Limon, Salami y Balsamico</div>
+<div class="item"><strong>Spezzia</strong> – Mini Romaine Hidroponica, Aderezo de Yogurth, Tahini y hierbas, Ajonjolí Negro, Grana Padano, Crujiente de Pan de masa madre</div>
+<button class="back" onclick="show('alimentos')">Volver</button>
+</div>
+
+
+<!-- PASTA -->
+<div id="pasta" class="screen">
+<h2>Pasta</h2>
+<div class="item"><strong>Agnolotti</strong> – Zanahoria, ossobuco, jerez español, ricotta, pistache, dátiles, Grana padano</div>
+<div class="item"><strong>Carbonara</strong> – Grana padano, yema, pancetta, pecorino romano, pimienta</div>
+<div class="item"><strong>Strozzapreti Amatriciana</strong> – Guanciale, Pancetta, Tomate cherry, Vino Tinto, Burrata, Aceite de oliva, Pecorino Romano</div>
+<div class="item"><strong>Fagottini</strong> – Pasta de Betabel, Queso de Cabra, Pecorino Romano, Semilla de Amapola, Cebollin</div>
+<div class="item"><strong>Gnocchetti Gorgonzola</strong> – Fonduta de Gorgonzola, Cebollin, Pimienta Negra, Balsamico Añejo</div>
+<div class="item"><strong>Gnocchi Norcina</strong> – Masa Madre, Grana Padano, Confit de Trufa, Salchicha Italiana, Aceite de Trufa Blanca</div>
+<div class="item"><strong>Gnocchi di Patate</strong> – Pesto de Albahaca con Piñon, Burrata, Nuez de la India, Pimienta Verde</div>
+<div class="item"><strong>Quadretti Marsala</strong> – Ragout de Picaña, Shitake, Portobello, Vino Marsala, Cebollas crujientes, Grana Padano</div>
+<div class="item"><strong>Ravioli Bianchi Neri</strong> – Relleno de Camaron, Mascarpone, Confit de Hongos, Bottarga, en burro fuso trufado</div>
+<div class="item"><strong>Tagliatelle</strong> – Ragout de Short Rib al vino Tinto, Grana Padano, Cocoa y Avellana</div>
+<div class="item"><strong>Tagliolini Spezzia</strong> – Pasta bicolor, Camaron, Confit de Hongos, Limon en Conserva, Vino Blanco, Porcini, Toque de Crema</div>
+<div class="item"><strong>Tagliolini al Limone</strong> – Limón, Grana Padano, Semilla de Amapola, Albahaca, Crema, Pimienta Negra</div>
+<div class="item"><strong>Tagliolini Neri</strong> – Ragout de almejas, Camaron, Pulpo, Tomate Cherry, Hinojo, Perejil, Chile en Conserva, Vino Blanco, Aceite de olivo</div>
+<button class="back" onclick="show('alimentos')">Volver</button>
+</div>
+
+
+<!-- SECONDI -->
+<div id="secondi" class="screen">
+<h2>Secondi</h2>
+<div class="item"><strong>Polipo</strong> – Pulpo al grill 200gr, Creme Fraische de curcuma y comino, Papa cambray, Arugula, Tomate cherry, Apio, Salsa macha de maple</div>
+<div class="item"><strong>Risotto e Filetto</strong> – Risotto trufado, Filete de res 220gr, Demi Glace, Grana Padano, Fonduta de Taleggio, Sal Maldon</div>
+<button class="back" onclick="show('alimentos')">Volver</button>
+</div>
+
+
+<!-- PIZZA -->
+<div id="pizza" class="screen">
+<h2>Pizza</h2>
+
+<div class="item">
+<strong>Margherita</strong><br>
+Pomodoro, mozzarella fresco, albahaca, grana padano, aceite de olivo, sal Maldon
+</div>
+
+<div class="item">
+<strong>Nduja</strong><br>
+Pomodoro, mozzarella fresco, nduja, broccolini ripassati, polen de hinojo, grana padano
+</div>
+
+<div class="item">
+<strong>Burrata</strong><br>
+Pomodoro, mozzarella fresco, chile fermentado, aceituna verde, burrata, grana padano, aceite de olivo, sal Maldon
+</div>
+
+<div class="item">
+<strong>Salame</strong><br>
+Fonduta de gorgonzola, mozzarella fresco, salame, miel trufada, polen de hinojo
+</div>
+
+<div class="item">
+<strong>Prosciutto</strong><br>
+Fonduta de gorgonzola, mozzarella fresco, arúgula, prosciutto San Daniele, grana padano, balsámico añejo
+</div>
+
+<div class="item">
+<strong>Provolone</strong><br>
+Fonduta de taleggio, mozzarella fresco, provolone ahumado, jamón artesanal, mix de hongos, ajo confitado, tomillo, sal Maldon
+</div>
+
+<div class="item">
+<strong>Tartufo</strong><br>
+Fonduta de taleggio, mozzarella fresco, grana padano, aceite de trufa, trufa fresca Tuber Melanosporum
+</div>
+
+<div class="item">
+<strong>Pepperoni e Salsiccia</strong><br>
+Salchicha italiana hecha en casa, pepperoni, mozzarella fresco, grana padano, chile en conserva, polen de hinojo, cebolla morada
+</div>
+
+<div class="item">
+<strong>Al Pesto</strong><br>
+Fonduta de taleggio, tomate cherry, pesto de albahaca y piñón
+</div>
+
+<button class="back" onclick="show('alimentos')">Volver</button>
+</div>
+
+
+<!-- DOLCI -->
+<div id="dolci" class="screen">
+<h2>Dolci</h2>
+
+<div class="item">
+<strong>Banana Tart</strong><br>
+Tarta con ganache de chocolate Conejo Turín, plátano, crema montada, chocolate amargo
+</div>
+
+<div class="item">
+<strong>Fragola</strong><br>
+Crema de mascarpone, fresas al vino tinto, merengue de albahaca, polvo de jamaica
+</div>
+
+<div class="item">
+<strong>Panna Cotta</strong><br>
+Panna cotta de coco, coulis de mango, maracuyá, cúrcuma, pistache, coco y hoja de oro
+</div>
+
+<div class="item">
+<strong>Rosy’s Cake</strong><br>
+Panqué de avellana, espresso, Nutella, helado de vainilla
+</div>
+
+<div class="item">
+<strong>Tiramisú</strong><br>
+Savoiardi, crema de mascarpone, brandy, cocoa alcalina
+</div>
+
+<div class="item">
+<strong>Torta Caprese</strong><br>
+Pastel de chocolate, harina de almendra, sorbetto de frambuesa con fresa
+</div>
+
+<div class="item">
+<strong>Ricotta Cheesecake</strong><br>
+Ricotta, blueberries, lemon curd
+</div>
+
+<div class="item">
+<strong>Cannoli Siciliani</strong><br>
+Ricotta, mascarpone, pistache, naranja confitada, chocolate semi amargo
+</div>
+
+<div class="item">
+<strong>Gelato</strong><br>
+1 bola / 2 bolas / Affogato<br>
+Sabores: Amaretto, Vaina de vainilla, Chocolate
+</div>
+
+<button class="back" onclick="show('alimentos')">Volver</button>
+</div>
+
+</div>
+
+<!-- BEBIDAS -->
+<div id="bebidas" class="screen">
+<h2>Bebidas</h2>
+<button onclick="show('cervezas')">Cervezas</button>
+<button onclick="show('cerveza-artesanal')">Cerveza Artesanal</button>
+<button onclick="show('cerveza-italiana')">Cerveza Italiana</button>
+<button onclick="show('refrescos')">Refrescos</button>
+<button onclick="show('otros')">Otros</button>
+<button onclick="show('agua')">Aguas</button>
+<button onclick="show('mixologia')">Mixología</button>
+<button onclick="show('softbar')">Soft Bar</button>
+<button onclick="show('aperitivos')">Aperitivos</button>
+<button onclick="show('digestivos')">Digestivos</button>
+<button onclick="show('spritz')">Spritz</button>
+<button onclick="show('destilados')">Destilados</button>
+<button onclick="show('vinos')">Vinos</button>
+<button onclick="show('cafeteria')">Cafetería & Tés</button>
+<button class="back" onclick="show('menu')">Volver</button>
+</div>
+
+<!-- CERVEZAS INDUSTRIALES -->
+<div id="cervezas" class="screen">
+<h2>Cervezas Industriales</h2>
+<div class="item"><b>Tecate Light</b> – Lager ligera, baja en calorías</div>
+<div class="item"><b>XX Lager</b> – Lager clara, balanceada y refrescante</div>
+<div class="item"><b>XX Ámbar</b> – Lager oscura, notas tostadas y cuerpo medio</div>
+<div class="item"><b>Bohemia Obscura</b> – Lager oscura, maltosa y profunda</div>
+<div class="item"><b>Bohemia Clara</b> – Lager premium, suave y aromática</div>
+<div class="item"><b>Heineken</b> – Lager europea, perfil herbal</div>
+<div class="item"><b>Heineken 0.0</b> – Cerveza sin alcohol, fresca y equilibrada</div>
+<div class="item"><b>Amstel Ultra</b> – Lager ligera, baja en calorías y carbohidratos</div>
+<hr>
+<div class="item"><b>Vaso Michelado</b> – Preparado con limón y sal</div>
+<div class="item"><b>Vaso Chelado</b> – Escarchado y Salsas</div>
+<div class="item"><b>Vaso Clamato</b> – Preparado con clamato, limón y salsas</div>
+<button class="back" onclick="show('bebidas')">Volver</button>
+</div>
+
+<!-- CERVEZA ARTESANAL -->
+<div id="cerveza-artesanal" class="screen">
+  <h2>Cerveza Artesanal</h2>
+
+  <div class="item">
+    <strong>Río de Lumbre IPA</strong> – IPA de Costa Oeste, perfil lupulado, amargor firme, notas cítricas y resinosas.
+  </div>
+
+  <div class="item">
+    <strong>Páramo Pale Ale</strong> – Pale Ale balanceada, maltas caramelo, cuerpo medio y final ligeramente dulce.
+  </div>
+
+  <div class="item">
+    <strong>Colima Cero IPA</strong> – IPA sin alcohol, aromas tropicales, amargor moderado y final limpio.
+  </div>
+
+  <div class="item">
+    <strong>Ticus Porter</strong> – Porter con notas marcadas a cacao y café, cuerpo sedoso y tostado elegante.
+  </div>
+
+  <div class="item">
+    <strong>Bildelberg Jackson IPA</strong> – IPA intensa, carácter lupulado pronunciado, aromas cítricos y herbales.
+  </div>
+
+  <div class="item">
+    <strong>Bildelberg Rosenberg Stout</strong> – Stout robusta, notas a chocolate amargo, café tostado y cuerpo profundo.
+  </div>
+
+  <div class="item">
+    <strong>Monopolio Lager</strong> – Lager artesanal clara, refrescante, perfil limpio y balanceado.
+  </div>
+
+  <div class="item">
+    <strong>Monopolio IPA</strong> – IPA aromática, amargor medio-alto, notas frutales y final seco.
+  </div>
+
+  <button class="back" onclick="show('bebidas')">Volver</button>
+</div>
+
+<!-- CERVEZA ARTESANAL ITALIANA -->
+<div id="cerveza-italiana" class="screen">
+  <h2>Cerveza Artesanal Italiana</h2>
+
+  <div class="item">
+    <strong>Peroni Red Label Lager</strong> – Lager italiana de cuerpo ligero, perfil limpio, notas suaves de malta y final seco.
+  </div>
+
+  <div class="item">
+    <strong>Moretti Pale Lager</strong> – Lager clásica italiana, balanceada, notas de cereal, ligera amargura y gran tomabilidad.
+  </div>
+
+  <div class="item">
+    <strong>Isaac Witbier Blanche</strong> – Cerveza de trigo estilo belga, especiada, cítrica, refrescante y ligeramente turbia.
+  </div>
+
+  <div class="item">
+    <strong>Rock´N Roll American Pale Ale</strong> – Pale Ale de inspiración americana, notas cítricas, maltas suaves y amargor medio.
+  </div>
+
+  <button class="back" onclick="show('bebidas')">Volver</button>
+</div>
+
+<!-- REFRESCOS -->
+<div id="refrescos" class="screen">
+  <h2>Refrescos</h2>
+
+  <div class="item"><strong>Coca Cola</strong> – Refresco de cola clásico</div>
+  <div class="item"><strong>Coca Cola sin azúcar</strong> – Cola sin calorías</div>
+  <div class="item"><strong>Coca Cola Light</strong> – Cola baja en calorías</div>
+  <div class="item"><strong>Sprite</strong> – Refresco de lima-limón</div>
+  <div class="item"><strong>Dr Pepper</strong> – Refresco especiado con notas dulces</div>
+  <div class="item"><strong>Sidral Mundet</strong> – Refresco de manzana</div>
+  <div class="item"><strong>Fresca</strong> – Refresco cítrico de toronja</div>
+  <div class="item"><strong>Ginger Ale</strong> – Refresco de jengibre</div>
+
+  <button class="back" onclick="show('bebidas')">Volver</button>
+</div>
+
+<!-- OTROS -->
+<div id="otros" class="screen">
+  <h2>Otros</h2>
+
+  <div class="item"><strong>Agua Quina</strong> – Bebida carbonatada de perfil amargo y refrescante</div>
+  <div class="item"><strong>Clamato Natural</strong> – Jugo de tomate, servido natural o preparado</div>
+  <div class="item"><strong>Limonada y Naranjada</strong> – Bebidas naturales preparadas al momento</div>
+
+  <button class="back" onclick="show('bebidas')">Volver</button>
+</div>
+
+<!-- AGUAS -->
+<div id="agua" class="screen">
+  <h2>Aguas</h2>
+
+  <h3>Agua Natural</h3>
+  <div class="item"><strong>Agua Ciel</strong> – Agua natural purificada</div>
+  <div class="item"><strong>Agua Artesanal Duero</strong> – Agua natural artesanal</div>
+  <div class="item"><strong>Agua Tehuacan Platino</strong> – Agua natural de manantial</div>
+
+  <h3>Agua Mineral</h3>
+  <div class="item"><strong>San Pellerino</strong> – Agua mineral italiana, fina y elegante</div>
+  <div class="item"><strong>Tehuacan</strong> – Agua mineral mexicana</div>
+  <div class="item"><strong>Topo Chico</strong> – Agua mineral de burbuja intensa</div>
+  <div class="item"><strong>Peñafiel</strong> – Agua mineral ligeramente gasificada</div>
+
+  <button class="back" onclick="show('bebidas')">Volver</button>
+</div>
+
+<!-- MIXOLOGIA -->
+<div id="mixologia" class="screen">
+  <h2>Mixología</h2>
+
+  <div class="item"><strong>Apple Pie</strong> – Bulleit Bourbon, Manzana, Mascabado, Jugo de Limón, Canela, Agua Mineral</div>
+
+  <div class="item"><strong>Beets</strong> – Barro Espadin Piña, Syrub de Betabel, Limón, Apio Macerado, Sal de Gusano</div>
+
+  <div class="item"><strong>Chapulin</strong> – Barro Espadin Gusano, Ancho Reyes Verde, Pepino, Limón, Jarabe Natural, Hinojo, Quina y Manzanilla</div>
+
+  <div class="item"><strong>Coffee Lover</strong> – Licor 43, Amareto, Espresso, Carnation</div>
+
+  <div class="item"><strong>Green London</strong> – Ginebra London, Mate, Lima, Jarabe Natural, Hinojo, Quina y Manzanilla</div>
+
+  <div class="item"><strong>Mojito Italiano</strong> – Frangelico, Azúcar, Menta, Limón</div>
+
+  <div class="item"><strong>Negroni Spezzia</strong> – Cinzano Rosoo, Beefeater, Prosseco, Syrub de Balsámico con Romero</div>
+
+  <div class="item"><strong>Strawberry Fields</strong> – Puerto de Indias, Vino Tinto, Fresa, Berries, Polvo de Jamaica, Agua Quina, Agua Mineral</div>
+
+  <div class="item"><strong>Yellow</strong> – Licor de Chile Ancho, Maracuyá, Cúrcuma, Limón y Jarabe Natural</div>
+
+  <div class="item"><strong>Sandia Pop</strong> – Absolut Sandía, Ancho Verde, Pimienta Rosa, Prosseco Rose, Soda, Garnitura de Toronja</div>
+
+  <button class="back" onclick="show('bebidas')">Volver</button>
+</div>
+
+<!-- SOFT BAR -->
+<div id="softbar" class="screen">
+  <h2>Soft Bar (Coctelería sin alcohol)</h2>
+
+  <div class="item"><strong>Jazmin</strong> – Té de Jazmín, Menta, Limón</div>
+
+  <div class="item"><strong>Limonata Rosa</strong> – Fresa, Lavanda, Limón, Agua Mineral</div>
+
+  <div class="item"><strong>Manila</strong> – Mango, Romero, Cúrcuma, Limón, Agua Mineral</div>
+
+  <div class="item"><strong>Manguito Colado</strong> – Mango, Crema de Coco, Albahaca, Canela, Carnation</div>
+
+  <div class="item"><strong>Muricata</strong> – Guanábana, Limón, Pepino, Albahaca, Agua Mineral</div>
+
+  <div class="item"><strong>Sole</strong> – Durazno, Naranja, Maracuyá, Agua Mineral</div>
+
+  <div class="item"><strong>Speziata</strong> – Manzana, Anís Estrella, Enebro, Agua Mineral</div>
+
+  <div class="item"><strong>Ginger Float</strong> – Sorbete de Frambuesa, Ginger Ale, Limón, Agua Mineral</div>
+
+  <div class="item"><strong>Soda Punch</strong> – Jamaica, Guayaba, Canela, Clavo, Naranja, Agua Mineral, Ralladura de Naranja</div>
+
+  <button class="back" onclick="show('bebidas')">Volver</button>
+</div>
+
+<!-- APERITIVOS -->
+<div id="aperitivos" class="screen">
+  <h2>Aperitivos (Copeo)</h2>
+
+  <div class="item"><strong>Aperol</strong> – Aperitivo italiano de perfil amargo-dulce y notas cítricas</div>
+  <div class="item"><strong>Campari</strong> – Bitter italiano intenso, herbal y aromático</div>
+  <div class="item"><strong>Cinzano</strong> – Vermut italiano, balanceado y especiado</div>
+  <div class="item"><strong>Fernet Branca</strong> – Amaro italiano, amargo, herbal y potente</div>
+  <div class="item"><strong>St Germain</strong> – Licor francés de flor de saúco, floral y elegante</div>
+
+  <button class="back" onclick="show('bebidas')">Volver</button>
+</div>
+
+<!-- DIGESTIVOS -->
+<div id="digestivos" class="screen">
+  <h2>Digestivos (Copeo)</h2>
+
+  <div class="item"><strong>Amaretto Conti</strong> – Licor italiano de almendra, dulce y aromático</div>
+  <div class="item"><strong>Baileys</strong> – Licor de crema irlandés, suave y cremoso</div>
+  <div class="item"><strong>Chartreuse Verde</strong> – Licor herbal francés, intenso y complejo</div>
+  <div class="item"><strong>Chinchon Dulce</strong> – Licor de anís dulce, tradicional español</div>
+  <div class="item"><strong>Chinchon Seco</strong> – Licor de anís seco, limpio y potente</div>
+  <div class="item"><strong>Frangelico</strong> – Licor italiano de avellana, dulce y tostado</div>
+  <div class="item"><strong>Grappa Prosseco</strong> – Destilado italiano de uva, seco y aromático</div>
+  <div class="item"><strong>Licor 43</strong> – Licor español dulce, vainilla y cítricos</div>
+  <div class="item"><strong>Limoncello de la Casa</strong> – Licor de limón artesanal, fresco y cítrico</div>
+  <div class="item"><strong>Las Cadenas</strong> – Licor tradicional mexicano</div>
+  <div class="item"><strong>Strega</strong> – Licor herbal italiano, especiado y elegante</div>
+  <div class="item"><strong>Vaccari Nero</strong> – Licor de sambuca negra, intenso y anisado</div>
+
+  <button class="back" onclick="show('bebidas')">Volver</button>
+</div>
+
+<!-- SPRITZ -->
+<div id="spritz" class="screen">
+  <h2>Spritz</h2>
+
+  <div class="item">
+    <strong>Aperol Spezzia</strong> – Aperol, Maracuya, Durazno, Naranja, Prosseco, Agua Mineral
+  </div>
+
+  <div class="item">
+    <strong>Aperol Spritz</strong> – Aperol, Naranja, Prosseco, Agua Mineral
+  </div>
+
+  <div class="item">
+    <strong>Strega Spritz</strong> – Strega, Aperol, Te de Limon, Hierbabuena, Prosseco Rose, Agua Mineral, Garnitura de Toronja
+  </div>
+
+  <div class="item">
+    <strong>St Germain Spritz</strong> – St Germain, Prosseco, Hierbabuena, Agua Mineral, Garnitura de Limon
+  </div>
+
+  <button class="back" onclick="show('bebidas')">Volver</button>
+</div>
+
+<!-- DESTILADOS -->
+<div id="destilados" class="screen">
+<h2>Destilados</h2>
+
+<h3>Bourbon</h3>
+<div class="item"><strong>Bulleit</strong><br>Bourbon de alto contenido de centeno, seco y especiado, con notas de vainilla, caramelo y roble tostado.</div>
+<div class="item"><strong>Maker’s Mark</strong><br>Bourbon suave y redondo, elaborado con trigo rojo; perfil dulce, mantequilloso y equilibrado.</div>
+
+<h3>Brandy</h3>
+<div class="item"><strong>Terry</strong><br>Brandy español elegante, con notas de frutos secos, madera y especias dulces.</div>
+<div class="item"><strong>Torres 10</strong><br>Clásico y estructurado, con carácter profundo de roble, vainilla y frutos maduros.</div>
+<div class="item"><strong>Magno</strong><br>Brandy aromático y balanceado, de perfil accesible y redondo.</div>
+
+<h3>Ginebra</h3>
+<div class="item"><strong>Hendrick’s</strong><br>Ginebra escocesa premium, fresca y floral, con pepino y pétalos de rosa.</div>
+<div class="item"><strong>Beefeater</strong><br>London Dry tradicional, seca y definida, con predominio de enebro y cítricos.</div>
+<div class="item"><strong>London No. 1</strong><br>Elegante y especiada, compleja, con notas balsámicas y final largo.</div>
+<div class="item"><strong>Puerto de Indias Strawberry</strong><br>Ginebra frutal y sedosa, ideal para coctelería fresca y moderna.</div>
+<div class="item"><strong>Bombay Sapphire</strong><br>Clásica y balanceada, botánicos bien integrados y perfil limpio.</div>
+
+<h3>Mezcal</h3>
+<div class="item"><strong>Ojo de Tigre</strong><br>Mezcal moderno y equilibrado, con ahumado suave y notas herbales.</div>
+<div class="item"><strong>Señorío</strong><br>Expresión tradicional del agave, mineral, seca y franca.</div>
+<div class="item"><strong>Barro Espadín Destilado de Piña</strong><br>Perfil tropical con ahumado delicado y dulzor natural del fruto.</div>
+<div class="item"><strong>Barro Espadín con Gusano</strong><br>Mezcal intenso, terroso y profundo, de carácter rústico.</div>
+<div class="item"><strong>Barro Tepeztate Silvestre</strong><br>Complejo y estructurado, herbal, mineral y de larga persistencia.</div>
+<div class="item"><strong>Barro Tobalá Silvestre</strong><br>Elegante y aromático, con notas florales y dulzor natural del agave.</div>
+<div class="item"><strong>Mezcalito de Mi Corazón Papalometl</strong><br>Balance fino, carácter vegetal y final sedoso.</div>
+
+<h3>Ron</h3>
+<div class="item"><strong>Bacardi Blanco</strong><br>Ligero y limpio, ideal para coctelería clásica.</div>
+<div class="item"><strong>Bacardi Añejo</strong><br>Suave y especiado, con notas de vainilla y madera.</div>
+<div class="item"><strong>Havana 7</strong><br>Complejo y profundo, con cacao, café y roble.</div>
+<div class="item"><strong>Matusalem Clásico</strong><br>Elegante y balanceado, de perfil seco y refinado.</div>
+<div class="item"><strong>Matusalem Platino</strong><br>Cristalino y sedoso, pensado para coctelería premium.</div>
+<div class="item"><strong>Zacapa Centenario 23</strong><br>Ron de alta gama, untuoso, con miel, caramelo y especias.</div>
+
+<h3>Tequila</h3>
+<div class="item"><strong>1800 Cristalino</strong><br>Reposado filtrado, limpio y elegante, suavidad excepcional.</div>
+<div class="item"><strong>Don Julio 70</strong><br>Cristalino premium, balance entre agave cocido y roble.</div>
+<div class="item"><strong>Herradura Reposado</strong><br>Robusto y bien estructurado, fiel al carácter del agave.</div>
+<div class="item"><strong>José Cuervo Tradicional</strong><br>Directo y herbal, perfil clásico y franco.</div>
+<div class="item"><strong>Maestro Dobel Diamante</strong><br>Cristalino sofisticado, sedoso y equilibrado.</div>
+
+<h3>Whisky</h3>
+<div class="item"><strong>Chivas Regal 12</strong><br>Suave y redondo, con miel, frutas maduras y ligero ahumado.</div>
+<div class="item"><strong>Jack Daniel’s No. 7</strong><br>Americano clásico, caramelo, vainilla y carbón.</div>
+<div class="item"><strong>Johnnie Walker Red Label</strong><br>Vivo y especiado, ideal para mezcla.</div>
+<div class="item"><strong>Johnnie Walker Black Label</strong><br>Profundo y equilibrado, con frutas, humo y roble.</div>
+<div class="item"><strong>Macallan 12</strong><br>Single malt elegante, frutos secos, vainilla y madera fina.</div>
+
+<button class="back" onclick="show('bebidas')">Volver</button>
+</div>
+
+
+<!-- VINOS -->
+<div id="vinos" class="screen">
+<h2>Vinos</h2>
+
+<h3>Abruzzo</h3>
+
+<div class="item">
+<b>Nicchio Montepulciano d’Abruzzo</b><br>
+Abruzzo, Italia · 100% Montepulciano<br>
+Tinto de cuerpo medio, frutal y expresivo, con notas de cereza negra, especias suaves y final redondo.<br>
+<i>Disponible por copa y botella</i>
+</div>
+
+<div class="item">
+<b>Storico</b><br>
+Abruzzo, Italia · 100% Montepulciano<br>
+Vino estructurado y elegante, con fruta madura, taninos firmes y gran persistencia.<br>
+<i>Disponible por botella</i>
+</div>
+
+<div class="item">
+<b>Terre di Chieti I.G.P</b><br>
+Abruzzo, Italia · 100% Sangiovese<br>
+Fresco y equilibrado, con acidez vibrante y perfil frutal ligero.<br>
+<i>Disponible por copa</i>
+</div>
+
+<div class="item">
+<b>Ottobucce</b><br>
+Abruzzo, Italia · Docetto, Barbera,Merlot,Freisa, Syrah, Albarossa, Cabernet y Bonarda <br>
+Complejo y armónico, con capas de fruta roja, especias y un final largo.<br>
+<i>Disponible por copa y botella</i>
+</div>
+
+<h3>Umbria</h3>
+
+<div class="item">
+<b>Vitiano – Falesco</b><br>
+Umbria, Italia · Sangiovese, Merlot, Cabernet Sauvignon<br>
+Equilibrado y moderno, con fruta madura, cuerpo medio y final sedoso.<br>
+<i>Disponible por botella</i>
+</div>
+
+<h3>Puglia</h3>
+
+<div class="item">
+<b>Chardonnay – Tormaresca</b><br>
+Puglia, Italia · 100% Chardonnay<br>
+Blanco fresco y limpio, con notas cítricas y textura suave.<br>
+<i>Disponible por botella</i>
+</div>
+
+<div class="item">
+<b>Primitivo Puglia Zin – Pasqua</b><br>
+Puglia, Italia · 100% Primitivo<br>
+Intenso y especiado, con fruta madura y cuerpo robusto.<br>
+<i>Disponible por botella</i>
+</div>
+
+<div class="item">
+<b>Zinfandel Blush – Rocca</b><br>
+Puglia, Italia · 100% Primitivo<br>
+Rosado fresco y frutal, con acidez balanceada y final amable.<br>
+<i>Disponible por copa y botella</i>
+</div>
+
+<h3>Veneto</h3>
+
+<div class="item">
+<b>Valpolicella Black Label – Pasqua</b><br>
+Veneto, Italia · Corvina, Corvinone, Rondinella<br>
+Ligero, fresco y frutal, ideal para beber con facilidad.<br>
+<i>Disponible por copa y botella</i>
+</div>
+
+<div class="item">
+<b>Amarone della Valpolicella – Pasqua</b><br>
+Veneto, Italia · 65% Corvina, 25% Rondinella, 5%Corvinone, 5% Negrara
+<br>
+Potente y elegante, con notas de frutos secos, cacao y gran profundidad.<br>
+<i>Disponible por botella</i>
+</div>
+
+<div class="item">
+<b>Passione Sentimento – Pasqua</b><br>
+Veneto, Italia · Merlot, Corvina, Croatina<br>
+Sedoso y envolvente, con fruta madura y perfil especiado.<br>
+<i>Disponible por botella</i>
+</div>
+
+<div class="item">
+<b>Lui – Pasqua</b><br>
+Veneto, Italia · Cabernet Sauvignon, Corvina<br>
+Intenso y estructurado, con carácter moderno y final largo.<br>
+<i>Disponible por botella</i>
+</div>
+
+<div class="item">
+<b>Ripasso Superiore – San Antonio</b><br>
+Veneto, Italia · Corvina, Corvinone, Rondinella, Croatina, Oseleta <br>
+Complejo y balanceado, con fruta concentrada y notas especiadas.<br>
+<i>Disponible por botella</i>
+</div>
+
+<h3>Toscana</h3>
+
+<div class="item">
+<b>Poggio Torto – Fanti</b><br>
+Toscana, Italia · Sangiovese, Merlot, Syrah<br>
+Elegante y bien estructurado, con fruta roja y taninos suaves.<br>
+<i>Disponible por botella</i>
+</div>
+
+<div class="item">
+<b>Santa Cristina Chianti – Antinori</b><br>
+Toscana, Italia · Sangiovese<br>
+Clásico italiano, fresco, balanceado y gastronómico.<br>
+<i>Disponible por botella</i>
+</div>
+
+<h3>Sicilia</h3>
+
+<div class="item">
+<b>Anthilia – Donnafugata</b><br>
+Sicilia, Italia · 100% Catarratto<br>
+Blanco aromático y fresco, con notas florales y cítricas.<br>
+<i>Disponible por botella</i>
+</div>
+
+<div class="item">
+<b>Sedara – Donnafugata</b><br>
+Sicilia, Italia · Nero d’Avola, Syrah, Merlot, Cabernet<br>
+Intenso y especiado, con carácter mediterráneo.<br>
+<i>Disponible por botella</i>
+</div>
+
+<div class="item">
+<b>Lumera – Donnafugata</b><br>
+Sicilia, Italia · Syrah, Nero d’Avola, Tannat<br>
+Rosado elegante, fresco y expresivo.<br>
+<i>Disponible por botella</i>
+</div>
+
+<h3>Argentina, Mexico, Portugal</h3>
+
+<div class="item">
+<b>Cabernet Sauvignon Vive – Benegas</b><br>
+Argentina · 100% Cabernet Sauvignon<br>
+Potente y estructurado, con fruta negra y final prolongado.<br>
+<i>Disponible por botella</i>
+</div>
+
+<div class="item">
+<b>Trasiego Mezcla Mediterránea</b><br>
+Valle de Guadalupe, México · 35% Montepulciano, 30% Aglianico
+25% Merlot, 10% Sangiovese
+<br>
+Complejo y gastronómico, con carácter artesanal.<br>
+<i>Disponible por copa y botella</i>
+</div>
+
+<div class="item">
+<b>Trasiego Nebbiolo</b><br>
+Valle de Guadalupe, México · 100% Nebbiolo<br>
+Elegante, floral y de tanino fino.<br>
+<i>Disponible por botella</i>
+</div>
+
+<div class="item">
+<b>Trasiego Selección Blanca</b><br>
+Valle de Guadalupe, México · Viognier, Arneis, Marsanne<br>
+Blanco aromático, fresco y balanceado.<br>
+<i>Disponible por copa y botella</i>
+</div>
+
+<div class="item">
+<b>Topo Verde</b><br>
+Lisboa, Portugal · Arinto, Fernão Pires, Sauvignon Blanc<br>
+Ligero, refrescante y mineral.<br>
+<i>Disponible por copa y botella</i>
+</div>
+
+<h3>Vinos Espumosos</h3>
+
+<div class="item">
+<b>Lambrusco Grasparossa DOC</b><br>
+Emilia-Romagna, Italia · 100% Lambrusco<br>
+Espumoso tinto seco, fresco y vibrante.<br>
+<i>Disponible por botella</i>
+</div>
+
+<div class="item">
+<b>Moscato – La Gioiosa</b><br>
+Veneto, Italia · 100% Moscato<br>
+Dulce, aromático y delicado.<br>
+<i>Disponible por botella</i>
+</div>
+
+<div class="item">
+<b>Asolo Prosecco</b><br>
+Veneto, Italia<br>
+Burbuja fina, fresca y elegante.<br>
+<i>Disponible por copa</i>
+</div>
+
+<button class="back" onclick="show('bebidas')">Volver</button>
+</div>
+
+
+<!-- CAFETERÍA & TÉS -->
+<div id="cafeteria" class="screen">
+<h2>Cafetería & Tés</h2>
+
+<h3>Café Spezzia</h3>
+
+<div class="item"><strong>Americano</strong> – Café limpio y balanceado, de cuerpo medio y acidez suave. Ideal para apreciar el perfil natural del grano.</div>
+
+<div class="item"><strong>Capuccino</strong> – Espresso intenso con leche vaporizada y espuma sedosa. Equilibrio perfecto entre fuerza y cremosidad.</div>
+
+<div class="item"><strong>Espresso</strong> – Extracción corta y precisa, concentrada, aromática y de final persistente.</div>
+
+<div class="item"><strong>Espresso Doble</strong> – Mayor intensidad y profundidad. Ideal para paladares que buscan carácter y potencia.</div>
+
+<div class="item"><strong>Macchiato</strong> – Espresso marcado con un toque sutil de leche vaporizada que redondea la acidez.</div>
+
+<div class="item"><strong>Macchiato Doble</strong> – Doble extracción con un ligero velo de leche, intenso pero equilibrado.</div>
+
+<div class="item"><strong>Espresso Tonic</strong> – Espresso frío sobre agua tónica, refrescante, aromático y con contraste cítrico.</div>
+
+<h3>Té Spezzia</h3>
+
+<div class="item"><strong>Flores de Manzanilla</strong> – Infusión floral y delicada, relajante y de notas suaves y dulces.</div>
+
+<div class="item"><strong>Té Verde con Menta</strong> – Refrescante y herbal, con equilibrio entre frescura vegetal y notas mentoladas.</div>
+
+<div class="item"><strong>Hierbabuena Ahumada</strong> – Infusión intensa y aromática, con carácter herbal profundo y final envolvente.</div>
+
+<div class="item"><strong>Lavanda con Toronjil</strong> – Floral y calmante, con notas suaves y elegantes que relajan el paladar.</div>
+
+<div class="item"><strong>Té Negro, Manzana y Naranja</strong> – Robusto y aromático, con notas frutales cálidas y especiadas.</div>
+
+<div class="item"><strong>Té Verde Jazmín</strong> – Fragante y elegante, floral, con final limpio y delicado.</div>
+
+<div class="item"><strong>Té Indian Chai</strong> – Especiado y reconfortante, con cuerpo medio y notas cálidas.</div>
+
+<div class="item"><strong>Té Naranja y Canela</strong> – Cítrico y especiado, ideal para un final reconfortante.</div>
+
+<div class="item"><strong>Té Frutos Rojos</strong> – Afrutado, ligeramente ácido y refrescante, de perfil vibrante.</div>
+
+<button class="back" onclick="show('bebidas')">Volver</button>
+</div>
+
+<!-- EXISTENCIAS -->
+<div id="existencias" class="screen">
+  <h2>Existencias</h2>
+
+  <div class="search-box">
+    🔍
+    <input type="text" placeholder="Buscar platillo o bebida"
+      oninput="searchProduct(this.value)">
+  </div>
+
+  <div id="suggestions" class="suggestions"></div>
+
+  <div class="stock-list">
+    <h3>Comida</h3>
+    <div id="stock-comida"></div>
+
+    <h3>Bebidas</h3>
+    <div id="stock-bebidas"></div>
+  </div>
+
+  <button class="back" onclick="show('spezzia')">Volver</button>
+</div>
+
+<!-- SEMÁFORO -->
+<div id="existencias-traffic" class="screen">
+  <h2 id="product-name"></h2>
+
+  <div class="traffic">
+    <div class="green" onclick="setStatus('green')"></div>
+    <div class="yellow" onclick="setStatus('yellow')"></div>
+    <div class="red" onclick="setStatus('red')"></div>
+  </div>
+
+  <button class="back" onclick="show('existencias')">Cancelar</button>
+</div>
+
+<!-- CANTIDAD -->
+<div id="existencias-qty" class="screen">
+  <h2>¿Cuántos quedan?</h2>
+
+  <div class="quantity-box">
+    <input id="qty" type="number" min="1">
+    <br><br>
+    <button onclick="saveQty()">Aceptar</button>
+  </div>
+
+  <button class="back" onclick="show('existencias')">Cancelar</button>
+</div>
+
+
+
+</body>
+</html>
