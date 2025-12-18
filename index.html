@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Spezzia App</title>
 
 <style>
@@ -12,6 +13,8 @@
 body {
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
+    width: 100vw;
+    height: 100vh;
     overflow: hidden;
     background: #f4f4f4;
 }
@@ -23,20 +26,23 @@ body {
 .screen {
     position: absolute;
     inset: 0;
+    width: 100vw;
+    height: 100vh;
     padding: 20px;
     box-sizing: border-box;
     background: #f4f4f4;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 
     /* Estado oculto */
-    opacity: 1;
-    transform: translateY(6px);
+    opacity: 0;
+    transform: translateY(12px);
     pointer-events: none;
 
     /* Animación iOS-like */
     transition:
-        opacity 0.27s ease-out,
-        transform 0.27s ease-out;
+        opacity 0.28s ease-out,
+        transform 0.28s ease-out;
 }
 
 .screen.active {
@@ -317,16 +323,6 @@ const products = {
     "Gelato Vainilla",
     "Gelato Chocolate",
     
-
-
-
-
-
-
-
-
-
-
   ],
 
   bebidas: [
@@ -1479,6 +1475,20 @@ Burbuja fina, fresca y elegante.<br>
 </div>
 
 
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("./service-worker.js")
+      .then(() => {
+        console.log("Service Worker registrado correctamente");
+      })
+      .catch(err => {
+        console.log("Error al registrar Service Worker:", err);
+      });
+  });
+}
+</script>
 
 </body>
 </html>
