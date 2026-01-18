@@ -220,6 +220,20 @@ button:hover {
     padding:10px;
 }
 
+.vip-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.vip-star {
+  font-size: 20px;
+  line-height: 1;
+  color: #000;
+}
+
+
 </style>
 
 <script>
@@ -1437,7 +1451,7 @@ Burbuja fina, fresca y elegante.<br>
     <button onclick="show('estudio-busqueda')">Búsqueda</button>
     <button onclick="show('estudio-recomendaciones')">Recomendaciones</button>
 
-    <button class="back" onclick="show('spezzia')">Volver</button> 
+    <button class="back" onclick="show('spezzia')">Volver</button>
 </div>
 
 <!-- =========================
@@ -1448,6 +1462,35 @@ Burbuja fina, fresca y elegante.<br>
     <p>Estudio detallado por platillo y bebida.</p>
     <button class="back" onclick="show('estudio')">Volver</button>
 </div>
+
+<!-- FICHAS  -->
+<div id="fichas-home" class="screen">
+
+  <h2>Fichas</h2>
+
+  <div class="menu-grid">
+
+    <button class="menu-btn" onclick="show('fichas-alimentos')">
+      Alimentos
+    </button>
+
+    <button class="menu-btn" onclick="show('fichas-bebidas')">
+      Bebidas
+    </button>
+
+    <button class="menu-btn vip-btn" onclick="show('fichas-vip')">
+      <span class="vip-star">★</span>
+      Platillos VIP
+    </button>
+
+  </div>
+
+  <button class="back-btn" onclick="show('estudio-home')">
+    Volver
+  </button>
+
+</div>
+
 
 <!-- =========================
      ESTUDIO · HISTORIA
