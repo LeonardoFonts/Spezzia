@@ -658,7 +658,7 @@ function renderStock(){
 <h2>Spezzia</h2>
 
 <button onclick="show('menu')">Menú</button>
-<button onclick="alert('Estudio – próximamente')">Estudio</button>
+<button onclick="show('Estudio')">Estudio</button>
 <button onclick="alert('Práctica – próximamente')">Práctica</button>
 <button onclick="show('existencias')">Existencias</button>
 <button onclick="alert('SpezzIA – Asistente inteligente de toma de órdenes. Próximamente.')">SpezzIA</button>
@@ -1475,6 +1475,58 @@ Burbuja fina, fresca y elegante.<br>
 </div>
 
 
+<!-- =========================
+     ESTUDIO
+     ========================= -->
+<div id="estudio" class="screen">
+    <h2>Estudio</h2>
+
+    <button onclick="show('estudio-fichas')">Fichas</button>
+    <button onclick="show('estudio-historia')">Historia</button>
+    <button onclick="show('estudio-busqueda')">Búsqueda</button>
+    <button onclick="show('estudio-recomendaciones')">Recomendaciones</button>
+
+    <button class="back" onclick="show('home')">Volver</button>
+</div>
+
+<!-- =========================
+     ESTUDIO · FICHAS
+     ========================= -->
+<div id="estudio-fichas" class="screen">
+    <h2>Fichas</h2>
+    <p>Estudio detallado por platillo y bebida.</p>
+    <button class="back" onclick="show('estudio')">Volver</button>
+</div>
+
+<!-- =========================
+     ESTUDIO · HISTORIA
+     ========================= -->
+<div id="estudio-historia" class="screen">
+    <h2>Historia</h2>
+    <p>Contexto, notas y origen de elementos clave del menú.</p>
+    <button class="back" onclick="show('estudio')">Volver</button>
+</div>
+
+<!-- =========================
+     ESTUDIO · BÚSQUEDA
+     ========================= -->
+<div id="estudio-busqueda" class="screen">
+    <h2>Búsqueda</h2>
+    <p>Consultas rápidas y cruces de información.</p>
+    <button class="back" onclick="show('estudio')">Volver</button>
+</div>
+
+<!-- =========================
+     ESTUDIO · RECOMENDACIONES
+     ========================= -->
+<div id="estudio-recomendaciones" class="screen">
+    <h2>Recomendaciones</h2>
+    <p>Casos prácticos de maridaje y sugerencias al cliente.</p>
+    <button class="back" onclick="show('estudio')">Volver</button>
+</div>
+
+
+
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -1489,6 +1541,8 @@ if ("serviceWorker" in navigator) {
   });
 }
 </script>
+
+
 
 </body>
 </html>
