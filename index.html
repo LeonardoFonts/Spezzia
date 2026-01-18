@@ -1425,55 +1425,6 @@ Burbuja fina, fresca y elegante.<br>
 <button class="back" onclick="show('bebidas')">Volver</button>
 </div>
 
-<!-- EXISTENCIAS -->
-<div id="existencias" class="screen">
-  <h2>Existencias</h2>
-
-  <div class="search-box">
-    🔍
-    <input type="text" placeholder="Buscar platillo o bebida"
-      oninput="searchProduct(this.value)">
-  </div>
-
-  <div id="suggestions" class="suggestions"></div>
-
-  <div class="stock-list">
-    <h3>Comida</h3>
-    <div id="stock-comida"></div>
-
-    <h3>Bebidas</h3>
-    <div id="stock-bebidas"></div>
-  </div>
-
-  <button class="back" onclick="show('spezzia')">Volver</button>
-</div>
-
-<!-- SEMÁFORO -->
-<div id="existencias-traffic" class="screen">
-  <h2 id="product-name"></h2>
-
-  <div class="traffic">
-    <div class="green" onclick="setStatus('green')"></div>
-    <div class="yellow" onclick="setStatus('yellow')"></div>
-    <div class="red" onclick="setStatus('red')"></div>
-  </div>
-
-  <button class="back" onclick="show('existencias')">Cancelar</button>
-</div>
-
-<!-- CANTIDAD -->
-<div id="existencias-qty" class="screen">
-  <h2>¿Cuántos quedan?</h2>
-
-  <div class="quantity-box">
-    <input id="qty" type="number" min="1">
-    <br><br>
-    <button onclick="saveQty()">Aceptar</button>
-  </div>
-
-  <button class="back" onclick="show('existencias')">Cancelar</button>
-</div>
-
 
 <!-- =========================
      ESTUDIO
@@ -1524,6 +1475,59 @@ Burbuja fina, fresca y elegante.<br>
     <p>Casos prácticos de maridaje y sugerencias al cliente.</p>
     <button class="back" onclick="show('estudio')">Volver</button>
 </div>
+
+
+
+<!-- EXISTENCIAS -->
+<div id="existencias" class="screen">
+  <h2>Existencias</h2>
+
+  <div class="search-box">
+    🔍
+    <input type="text" placeholder="Buscar platillo o bebida"
+      oninput="searchProduct(this.value)">
+  </div>
+
+  <div id="suggestions" class="suggestions"></div>
+
+  <div class="stock-list">
+    <h3>Comida</h3>
+    <div id="stock-comida"></div>
+
+    <h3>Bebidas</h3>
+    <div id="stock-bebidas"></div>
+  </div>
+
+  <button class="back" onclick="show('spezzia')">Volver</button>
+</div>
+
+<!-- SEMÁFORO -->
+<div id="existencias-traffic" class="screen">
+  <h2 id="product-name"></h2>
+
+  <div class="traffic">
+    <div class="green" onclick="setStatus('green')"></div>
+    <div class="yellow" onclick="setStatus('yellow')"></div>
+    <div class="red" onclick="setStatus('red')"></div>
+  </div>
+
+  <button class="back" onclick="show('existencias')">Cancelar</button>
+</div>
+
+<!-- CANTIDAD -->
+<div id="existencias-qty" class="screen">
+  <h2>¿Cuántos quedan?</h2>
+
+  <div class="quantity-box">
+    <input id="qty" type="number" min="1">
+    <br><br>
+    <button onclick="saveQty()">Aceptar</button>
+  </div>
+
+  <button class="back" onclick="show('existencias')">Cancelar</button>
+</div>
+
+
 
 
 
