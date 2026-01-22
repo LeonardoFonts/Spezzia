@@ -589,6 +589,13 @@ function searchProduct(val){
 function openTraffic(p){
   currentProduct = p;
   document.getElementById("product-name").innerText = p;
+
+  // LIMPIAR INPUT DE CANTIDAD AL ENTRAR
+  const qtyInput = document.getElementById("qty");
+  if(qtyInput){
+    qtyInput.value = "";
+  }
+
   show("existencias-traffic");
 }
 
@@ -598,23 +605,30 @@ function setStatus(color){
     show("existencias");
     renderStock();
   }
+
   if(color === "red"){
     stock[currentProduct] = {status:"red"};
     show("existencias");
     renderStock();
   }
+
   if(color === "yellow"){
     show("existencias-qty");
   }
 }
 
 function saveQty(){
-  const q = parseInt(document.getElementById("qty").value);
+  const qtyInput = document.getElementById("qty");
+  const q = parseInt(qtyInput.value);
+
   if(q > 0){
     stock[currentProduct] = {status:"yellow", qty:q};
     show("existencias");
     renderStock();
   }
+
+  // LIMPIAR INPUT DESPUÉS DE GUARDAR
+  qtyInput.value = "";
 }
 
 /* =========================
