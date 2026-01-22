@@ -568,7 +568,15 @@ function searchProduct(val){
     if(p.toLowerCase().includes(val.toLowerCase())){
       const d = document.createElement("div");
       d.innerText = p;
-      d.onclick = ()=>openTraffic(p);
+
+      d.onclick = () => {
+        openTraffic(p);
+
+        // LIMPIAR BUSCADOR
+        document.getElementById("searchInput").value = "";
+        sug.innerHTML = "";
+      };
+
       sug.appendChild(d);
     }
   });
