@@ -1520,12 +1520,16 @@ Burbuja fina, fresca y elegante.<br>
 
 
 <!-- EXISTENCIAS -->
+   
 <div id="existencias" class="screen">
   <h2>Existencias</h2>
 
   <div class="search-box">
     🔍
-    <input type="text" placeholder="Buscar platillo o bebida"
+    <input
+      id="searchInput"
+      type="text"
+      placeholder="Buscar platillo o bebida"
       oninput="searchProduct(this.value)">
   </div>
 
@@ -1541,7 +1545,6 @@ Burbuja fina, fresca y elegante.<br>
 
   <button class="back" onclick="show('spezzia')">Volver</button>
 </div>
-
 <!-- SEMÁFORO -->
 <div id="existencias-traffic" class="screen">
   <h2 id="product-name"></h2>
