@@ -232,6 +232,38 @@ button:hover {
     margin-right: 6px;
     line-height: 1;
 }
+
+   .dish-list {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+.dish-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.dish-name {
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.vip-star {
+  font-size: 18px;
+  cursor: pointer;
+  color: transparent;
+  -webkit-text-stroke: 1.5px #fff;
+}
+
+.vip-star.active {
+  color: #d4af37;
+  -webkit-text-stroke: 0;
+}
 </style>
 
 <script>
@@ -1508,7 +1540,9 @@ Burbuja fina, fresca y elegante.<br>
 
   <h2>Alimentos</h2>
 
-  <button class="menu-btn">Speciali</button>
+ <button onclick="show('fichas-speciali')">
+  Speciali
+</button> 
 
   <button class="menu-btn">Antipasti</button>
 
@@ -1523,6 +1557,69 @@ Burbuja fina, fresca y elegante.<br>
   <button class="menu-btn">Dolci</button>
 
   <button class="back" onclick="show('fichas-home')">
+    Volver
+  </button>
+
+</div>
+
+   <!-- FICHAS · ALIMENTOS · SPECIALI -->
+<div id="fichas-alimentos-speciali" class="screen">
+
+  <h2>Speciali</h2>
+
+  <ul class="dish-list">
+
+    <li class="dish-item">
+      <span class="dish-name" onclick="openDish('crema-di-funghi')">
+        Crema di Funghi
+      </span>
+      <span class="vip-star" onclick="toggleVIP(this)">★</span>
+    </li>
+
+    <li class="dish-item">
+      <span class="dish-name" onclick="openDish('zucca-e-burrata')">
+        Zucca e Burrata
+      </span>
+      <span class="vip-star" onclick="toggleVIP(this)">★</span>
+    </li>
+
+    <li class="dish-item">
+      <span class="dish-name" onclick="openDish('tortelloni-di-zucca')">
+        Tortelloni di Zucca
+      </span>
+      <span class="vip-star" onclick="toggleVIP(this)">★</span>
+    </li>
+
+    <li class="dish-item">
+      <span class="dish-name" onclick="openDish('pizza-di-zucca')">
+        Pizze di Zucca
+      </span>
+      <span class="vip-star" onclick="toggleVIP(this)">★</span>
+    </li>
+    <li class="dish-item">
+      <span class="dish-name" onclick="openDish('cotoletta-di-maiale')">
+        Cotoletta de Maiale
+      </span>
+      <span class="vip-star" onclick="toggleVIP(this)">★</span>
+    </li>
+
+    <li class="dish-item">
+      <span class="dish-name" onclick="openDish('pumpkin-cake')">
+        Pumpkin Cake
+      </span>
+      <span class="vip-star" onclick="toggleVIP(this)">★</span>
+    </li>
+
+    <li class="dish-item">
+      <span class="dish-name" onclick="openDish('zeppole')">
+        Zeppole
+      </span>
+      <span class="vip-star" onclick="toggleVIP(this)">★</span>
+    </li>
+
+  </ul>
+
+  <button class="back" onclick="show('fichas-alimentos')">
     Volver
   </button>
 
@@ -1670,6 +1767,14 @@ if ("serviceWorker" in navigator) {
         console.log("Error al registrar Service Worker:", err);
       });
   });
+}
+   function toggleVIP(star){
+  star.classList.toggle("active");
+}
+
+function openFicha(nombre){
+  console.log("Abrir ficha de:", nombre);
+  // Aquí después entraremos al nivel 4 (ficha individual)
 }
 </script>
 
