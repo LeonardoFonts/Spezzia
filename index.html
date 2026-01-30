@@ -266,6 +266,85 @@ button:hover {
   color: #d4af37;
   -webkit-text-stroke: 0;
 }
+
+/* =========================
+   FICHA · PLATILLO (NIVEL 4)
+   ========================= */
+
+.ficha-header {
+    background: #2b2b2b;
+    color: #fff;
+    padding: 22px 18px 26px;
+    border-radius: 14px;
+    margin-bottom: 22px;
+}
+
+.ficha-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.ficha-title .vip-star {
+    font-size: 18px;
+    color: #d4af37;
+}
+
+.ficha-desc {
+    text-align: center;
+    font-size: 15px;
+    line-height: 1.45;
+    opacity: 0.95;
+}
+
+.audio-btn {
+    margin-top: 16px;
+    background: #111;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 15px;
+}
+
+.ficha-section {
+    margin-bottom: 26px;
+}
+
+.section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.add-btn {
+    background: #111;
+    color: #fff;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    font-size: 18px;
+    line-height: 1;
+    padding: 0;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag {
+    background: #111;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 14px;
+    font-size: 13px;
+}
    
 </style>
 
@@ -1625,8 +1704,77 @@ Burbuja fina, fresca y elegante.<br>
   <button class="back" onclick="show('fichas-alimentos')">
     Volver
   </button>
+<!-- =========================
+     FICHA PLATILLO – NIVEL 4
+     ========================= -->
+<div id="ficha-platillo" class="screen">
 
-</div>
+  <!-- HEADER OSCURO -->
+  <div class="ficha-header">
+    <div class="ficha-title-row">
+      <h2 class="ficha-title">
+        Crema di Funghi
+        <span class="ficha-vip-star">★</span>
+      </h2>
+    </div>
+
+    <p class="ficha-desc">
+      Velouté de hongos, vino tinto, duxell,
+      crocante de parmigiano, crema trufada.
+    </p>
+
+    <button class="audio-btn">
+      🔊 Escuchar
+    </button>
+  </div>
+
+  <!-- CONTENIDO BLANCO -->
+  <div class="ficha-body">
+
+    <div class="ficha-section">
+      <div class="section-title">
+        Ingredientes Clave
+        <span class="add-btn">＋</span>
+      </div>
+      <div class="chip-group">
+        <span class="chip">Crema trufada</span>
+        <span class="chip">Velouté de hongos</span>
+        <span class="chip">Crocante de parmigiano</span>
+      </div>
+    </div>
+
+    <div class="ficha-section">
+      <div class="section-title">
+        Perfil de Sabor
+        <span class="add-btn">＋</span>
+      </div>
+      <div class="chip-group">
+        <span class="chip">Cremoso</span>
+        <span class="chip">Intenso</span>
+        <span class="chip">Elegante</span>
+      </div>
+    </div>
+
+    <div class="ficha-section">
+      <div class="section-title">
+        Maridaje Sugerido
+        <span class="add-btn">＋</span>
+      </div>
+      <ul class="maridaje-list">
+        <li>Vino Blanco</li>
+        <li>Spritz</li>
+        <li>Solé</li>
+        <li>Cerveza Artesanal Peroni</li>
+      </ul>
+    </div>
+
+    <button class="back ficha-back" onclick="cerrarFicha()">
+      Volver
+    </button>
+
+  </div>
+
+ 
 
 
    <!-- FICHAS · BEBIDAS -->
