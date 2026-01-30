@@ -1926,21 +1926,16 @@ function openFicha(nombre){
   // Aquí después entraremos al nivel 4 (ficha individual)
 }
 
+
 /* ===== ABRIR FICHA NIVEL 4 ===== */
 function openDish(id){
-  document.querySelectorAll(".screen").forEach(s => {
-    s.style.display = "none";
-  });
-
-  document.getElementById("ficha-platillo").style.display = "block";
+  show("ficha-platillo");
 }
 
 /* ===== CERRAR FICHA ===== */
 function cerrarFicha(){
-  document.getElementById("ficha-platillo").style.display = "none";
-  document.getElementById("fichas-alimentos-speciali").style.display = "block";
+  show("fichas-alimentos-speciali");
 }
-
 
 </script>
 
