@@ -1925,6 +1925,23 @@ function openFicha(nombre){
   console.log("Abrir ficha de:", nombre);
   // Aquí después entraremos al nivel 4 (ficha individual)
 }
+
+/* ===== ABRIR FICHA NIVEL 4 ===== */
+function openDish(id){
+  document.querySelectorAll(".screen").forEach(s => {
+    s.style.display = "none";
+  });
+
+  document.getElementById("ficha-platillo").style.display = "block";
+}
+
+/* ===== CERRAR FICHA ===== */
+function cerrarFicha(){
+  document.getElementById("ficha-platillo").style.display = "none";
+  document.getElementById("fichas-alimentos-speciali").style.display = "block";
+}
+
+
 </script>
 
 
