@@ -1748,7 +1748,8 @@ Burbuja fina, fresca y elegante.<br>
       crocante de parmigiano, crema trufada.
     </p>
 
-    <button class="audio-btn" id="audio-btn">
+
+<button class="audio-btn" onclick="reproducirAudio()">
   🔈 Escuchar
 </button>
 
@@ -1982,24 +1983,20 @@ function cerrarFicha(){
   show("fichas-alimentos-speciali");
 }
 
-const audioBtn = document.getElementById("audio-btn");
-const audio = document.getElementById("audio-platillo");
 
-if (audioBtn && audio) {
-  audioBtn.addEventListener("click", () => {
-    if (audio.paused) {
-      audio.play();
-      audioBtn.innerText = "🔊 Reproduciendo...";
-    } else {
-      audio.pause();
-      audioBtn.innerText = "🔈 Escuchar";
+  // AUDIO FICHA
+  let audioActual = null;
+
+  function reproducirAudio() {
+    if (audioActual) {
+      audioActual.pause();
+      audioActual.currentTime = 0;
     }
-  });
 
-  audio.addEventListener("ended", () => {
-    audioBtn.innerText = "🔈 Escuchar";
-  });
-}
+    audioActual = new Audio("crema.m4a");
+    audioActual.play();
+  }
+
 
 </script>
 
