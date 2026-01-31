@@ -1729,33 +1729,36 @@ Burbuja fina, fresca y elegante.<br>
      ========================= -->
 <div id="ficha-platillo" class="screen">
 
-  <!-- HEADER -->
-  <div class="ficha-header">
+  
+<!-- HEADER -->
+<div class="ficha-header">
 
-    <div class="ficha-title-row">
-      <h2 class="ficha-title">
-        Crema di Funghi
-        <!-- ⭐ solo si es VIP -->
-        <!-- <span class="ficha-vip-star">★</span> -->
-      </h2>
+  <div class="ficha-title-row">
+    <h2 class="ficha-title">
+      Crema di Funghi
+      <!-- ⭐ solo si es VIP -->
+      <!-- <span class="ficha-vip-star">★</span> -->
+    </h2>
 
-      <!-- + DESCRIPCIÓN -->
-      <button class="add-btn">+</button>
-    </div>
+    <!-- + DESCRIPCIÓN -->
+    <button class="add-btn">+</button>
+  </div>
 
-    <p class="ficha-desc">
-      Velouté de hongos, vino tinto, duxell,
-      crocante de parmigiano, crema trufada.
-    </p>
+  <p class="ficha-desc">
+    Velouté de hongos, vino tinto, duxell,
+    crocante de parmigiano, crema trufada.
+  </p>
 
+  <button class="audio-btn" onclick="reproducirAudio()">
+    🔈 Escuchar
+  </button>
 
-<button class="audio-btn" onclick="reproducirAudio()">
-  🔈 Escuchar
-</button>
+  <audio id="audio-platillo" preload="auto">
+    <source src="crema.m4a" type="audio/mp4">
+  </audio>
 
-<audio id="audio-platillo" preload="auto">
-  <source src="crema.m4a" type="audio/mp4">
-</audio>
+</div>
+
 
   <!-- CUERPO -->
   <div class="ficha-body">
