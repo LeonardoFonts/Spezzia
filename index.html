@@ -1754,9 +1754,8 @@ Burbuja fina, fresca y elegante.<br>
 </button>
 
 <audio id="audio-platillo" preload="auto">
-  <source src="audios/crema-di-funghi.mp3" type="audio/mpeg">
+  <source src="crema.m4a" type="audio/mp4">
 </audio>
-  </div>
 
   <!-- CUERPO -->
   <div class="ficha-body">
@@ -1985,18 +1984,22 @@ function cerrarFicha(){
 
 
   // AUDIO FICHA
-  let audioActual = null;
+  
+function reproducirAudio() {
+  const audio = document.getElementById("audio-platillo");
 
-  function reproducirAudio() {
-    if (audioActual) {
-      audioActual.pause();
-      audioActual.currentTime = 0;
-    }
-
-    audioActual = new Audio("crema.m4a");
-    audioActual.play();
+  if (!audio) {
+    alert("Audio no encontrado");
+    return;
   }
 
+  if (audio.paused) {
+    audio.play();
+  } else {
+    audio.pause();
+    audio.currentTime = 0;
+  }
+}
 
 </script>
 
