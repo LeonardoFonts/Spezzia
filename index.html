@@ -1982,6 +1982,25 @@ function cerrarFicha(){
   show("fichas-alimentos-speciali");
 }
 
+const audioBtn = document.getElementById("audio-btn");
+const audio = document.getElementById("audio-platillo");
+
+if (audioBtn && audio) {
+  audioBtn.addEventListener("click", () => {
+    if (audio.paused) {
+      audio.play();
+      audioBtn.innerText = "🔊 Reproduciendo...";
+    } else {
+      audio.pause();
+      audioBtn.innerText = "🔈 Escuchar";
+    }
+  });
+
+  audio.addEventListener("ended", () => {
+    audioBtn.innerText = "🔈 Escuchar";
+  });
+}
+
 </script>
 
 
