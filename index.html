@@ -268,82 +268,103 @@ button:hover {
 }
 
 /* =========================
-   FICHA · PLATILLO (NIVEL 4)
+   FICHA PLATILLO – ESTILO
    ========================= */
 
 .ficha-header {
-    background: #2b2b2b;
-    color: #fff;
-    padding: 22px 18px 26px;
-    border-radius: 14px;
-    margin-bottom: 22px;
+  background: linear-gradient(#2b2b2b, #1e1e1e);
+  padding: 26px 20px 30px;
+  border-radius: 18px;
+  color: #fff;
+}
+
+.ficha-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .ficha-title {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    font-size: 22px;
-    font-weight: 700;
-    margin-bottom: 12px;
+  font-size: 26px;
+  margin: 0;
 }
 
-.ficha-title .vip-star {
-    font-size: 18px;
-    color: #d4af37;
+.ficha-vip-star {
+  color: #d4af37;
+  font-size: 20px;
+  margin-left: 8px;
 }
 
 .ficha-desc {
-    text-align: center;
-    font-size: 15px;
-    line-height: 1.45;
-    opacity: 0.95;
+  margin: 14px 0 22px;
+  opacity: 0.9;
 }
 
+/* BOTÓN ESCUCHAR */
+
 .audio-btn {
-    margin-top: 16px;
-    background: #111;
-    border-radius: 10px;
-    padding: 12px;
-    font-size: 15px;
+  width: 100%;
+  background: #111;
+  border-radius: 14px;
+  font-size: 18px;
+}
+
+/* CUERPO */
+
+.ficha-body {
+  padding: 20px 12px;
 }
 
 .ficha-section {
-    margin-bottom: 26px;
+  margin-bottom: 28px;
 }
+
+/* TÍTULOS DE CATEGORÍA */
 
 .section-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: 700;
-    margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
 }
+
+/* BOTÓN + PERFECTAMENTE CENTRADO */
 
 .add-btn {
-    background: #111;
-    color: #fff;
-    border-radius: 50%;
-    width: 26px;
-    height: 26px;
-    font-size: 18px;
-    line-height: 1;
-    padding: 0;
+  width: 32px;
+  height: 32px;
+  background: #111;
+  border-radius: 50%;
+  border: none;
+  color: #fff;
+  font-size: 22px;
+  line-height: 32px;
+  text-align: center;
+  padding: 0;
 }
 
-.tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+/* CHIPS */
+
+.chip-group {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
-.tag {
-    background: #111;
-    color: #fff;
-    padding: 6px 12px;
-    border-radius: 14px;
-    font-size: 13px;
+.chip {
+  background: #111;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+/* MARIDAJE */
+
+.maridaje-list {
+  margin-top: 10px;
+  padding-left: 20px;
 }
    
 </style>
@@ -1702,17 +1723,25 @@ Burbuja fina, fresca y elegante.<br>
 
 </div>
 
+
 <!-- =========================
      FICHA PLATILLO – NIVEL 4
      ========================= -->
 <div id="ficha-platillo" class="screen">
 
-  <!-- HEADER OSCURO -->
+  <!-- HEADER -->
   <div class="ficha-header">
-    <h2 class="ficha-title">
-      Crema di Funghi
-      <span class="ficha-vip-star">★</span>
-    </h2>
+
+    <div class="ficha-title-row">
+      <h2 class="ficha-title">
+        Crema di Funghi
+        <!-- ⭐ solo si es VIP -->
+        <!-- <span class="ficha-vip-star">★</span> -->
+      </h2>
+
+      <!-- + DESCRIPCIÓN -->
+      <button class="add-btn">+</button>
+    </div>
 
     <p class="ficha-desc">
       Velouté de hongos, vino tinto, duxell,
@@ -1720,48 +1749,60 @@ Burbuja fina, fresca y elegante.<br>
     </p>
 
     <button class="audio-btn">
-      🔊 Escuchar
+      🔈 Escuchar
     </button>
   </div>
 
-  <!-- CONTENIDO BLANCO -->
+  <!-- CUERPO -->
   <div class="ficha-body">
 
+    <!-- INGREDIENTES -->
     <div class="ficha-section">
+
       <div class="section-title">
-        Ingredientes Clave
-        <span class="add-btn">＋</span>
+        <strong>Ingredientes Clave</strong>
+        <button class="add-btn">+</button>
       </div>
+
       <div class="chip-group">
         <span class="chip">Crema trufada</span>
         <span class="chip">Velouté de hongos</span>
         <span class="chip">Crocante de parmigiano</span>
       </div>
+
     </div>
 
+    <!-- PERFIL -->
     <div class="ficha-section">
+
       <div class="section-title">
-        Perfil de Sabor
-        <span class="add-btn">＋</span>
+        <strong>Perfil de Sabor</strong>
+        <button class="add-btn">+</button>
       </div>
+
       <div class="chip-group">
         <span class="chip">Cremoso</span>
         <span class="chip">Intenso</span>
         <span class="chip">Elegante</span>
       </div>
+
     </div>
 
+    <!-- MARIDAJE -->
     <div class="ficha-section">
+
       <div class="section-title">
-        Maridaje Sugerido
-        <span class="add-btn">＋</span>
+        <strong>Maridaje Sugerido</strong>
+        <button class="add-btn">+</button>
       </div>
+
       <ul class="maridaje-list">
         <li>Vino Blanco</li>
         <li>Spritz</li>
         <li>Solé</li>
         <li>Cerveza Artesanal Peroni</li>
       </ul>
+
     </div>
 
     <button class="back ficha-back" onclick="show('fichas-alimentos-speciali')">
@@ -1769,7 +1810,7 @@ Burbuja fina, fresca y elegante.<br>
     </button>
 
   </div>
-
+</div>
 
 
  
