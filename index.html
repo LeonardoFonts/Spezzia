@@ -1734,11 +1734,11 @@ Burbuja fina, fresca y elegante.<br>
 <div class="ficha-header">
 
   <div class="ficha-title-row">
-    <h2 class="ficha-title">
-      Crema di Funghi
-      <!-- ⭐ solo si es VIP -->
-      <!-- <span class="ficha-vip-star">★</span> -->
-    </h2>
+    
+<h2 class="ficha-title">
+  Crema di Funghi
+  <span id="ficha-vip-star" class="ficha-vip-star">★</span>
+</h2>
 
     <!-- + DESCRIPCIÓN -->
     <button class="add-btn">+</button>
@@ -1967,6 +1967,15 @@ if ("serviceWorker" in navigator) {
 }
    function toggleVIP(star){
   star.classList.toggle("active");
+
+  const nombrePlatillo =
+    star.parentElement.querySelector(".dish-name").innerText;
+
+  if (star.classList.contains("active")) {
+    localStorage.setItem("vip-" + nombrePlatillo, "true");
+  } else {
+    localStorage.removeItem("vip-" + nombrePlatillo);
+  }
 }
 
 function openFicha(nombre){
@@ -1976,7 +1985,24 @@ function openFicha(nombre){
 
 
 /* ===== ABRIR FICHA NIVEL 4 ===== */
+
 function openDish(id){
+  // Guardamos qué platillo se abrió
+  window.platilloActual = id;
+
+  // Buscar si ese platillo es VIP en nivel 3
+  const estrellaNivel3 = document.querySelector(
+    `[onclick="openDish('${id}')"]`
+  )?.parentElement.querySelector(".vip-star");
+
+  const fichaStar = document.getElementById("ficha-vip-star");
+
+  if (estrellaNivel3 && estrellaNivel3.classList.contains("active")) {
+    fichaStar.style.display = "inline";
+  } else {
+    fichaStar.style.display = "none";
+  }
+
   show("ficha-platillo");
 }
 
