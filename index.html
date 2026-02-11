@@ -278,10 +278,11 @@ button:hover {
   color: #fff;
 }
 
-.ficha-title-row {
+  .ficha-title-row {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
+  position: relative;
 }
 
 .ficha-title {
@@ -289,10 +290,12 @@ button:hover {
   margin: 0;
 }
 
-.ficha-vip-star {
+ .ficha-vip-star {
+  display: none;        /* JS la muestra solo si es VIP */
   color: #d4af37;
-  font-size: 20px;
-  margin-left: 8px;
+  font-size: 26px;      /* un poco más grande */
+  margin-bottom: 4px;  /* separación con el título */
+  line-height: 1;
 }
 
 .ficha-desc {
@@ -1734,11 +1737,12 @@ Burbuja fina, fresca y elegante.<br>
 <div class="ficha-header">
 
   <div class="ficha-title-row">
-    
-<h2 class="ficha-title">
-  Crema di Funghi
+
   <span id="ficha-vip-star" class="ficha-vip-star">★</span>
-</h2>
+
+  <h2 class="ficha-title">
+    Crema di Funghi
+  </h2>
 
     <!-- + DESCRIPCIÓN -->
     <button class="add-btn">+</button>
